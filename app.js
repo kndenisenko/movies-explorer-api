@@ -13,7 +13,8 @@ const cors = require('./middlewares/cors');
 const rateLimit = require('./middlewares/rateLimit');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-// const { NODE_ENV, PORT } = process.env;
+const { NODE_ENV, PORT, MONGO_BASE } = process.env;
+
 const { NoValidIdError } = require('./errors/NoValidIdError');
 const error500 = require('./middlewares/errorHandler');
 
@@ -37,17 +38,6 @@ dotenv.config();
 
 const app = express();
 rateLimit(app);
-// const { PORT = 3000 } = process.env;
-
-// Подключаем защиту от DDoS
-// Ограничиваем количество запросов в 15 минут до 300 штук
-// Хотя всё равно они прилетят за первые секунды. Наверное :)
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 300, // Limit each IP to 300 requests per `window` (here, per 15 minutes)
-//   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-//   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-// });
 
 app.use(cors);
 
@@ -62,7 +52,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Подключаемся к БД moongoose
 mongoose.set('strictQuery', false); // убираем warning из консоли при старте
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect(MONGO_BASE);
 
 route(app);
 
@@ -80,8 +70,8 @@ app.use((req, res, next) => {
 // Обработка ошибок сервера, ошибка 500
 error500(app);
 
-console.log('status', process.env.NODE_ENV);
-console.log('port', process.env.PORT);
+console.log('status', NODE_ENV);
+console.log('port', PORT);
 
-app.listen(process.env.NODE_ENV === 'production' ? process.env.PORT : 3004, () => {
+app.listen(NODE_ENV === 'production' ? PORT : 3004, () => {
 });

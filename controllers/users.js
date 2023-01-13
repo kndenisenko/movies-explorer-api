@@ -4,7 +4,7 @@ const User = require('../models/users');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
 
-// const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Контроллер изменения имени и почты Юзера updateUser
 function updateUser(req, res, next) {
@@ -70,7 +70,7 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'blah-blah-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'blah-blah-key', { expiresIn: '7d' });
       res.send({ token, userId: user._id });
     })
     .catch((err) => {

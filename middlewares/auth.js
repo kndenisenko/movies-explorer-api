@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const { UnauthorizedError } = require('../errors/UnauthorizedError');
 
-// const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Значаение payload будет перезаписано, поэтому оно создано через let
 let payload;
@@ -24,17 +24,17 @@ const isAuthorized = (req, res, next) => {
   // console.log('----------------------');
   // console.log('backed, isAuthorized payload:', payload);
   // console.log('----------------------');
-  // console.log('middlewares NODE_ENV', process.env.NODE_ENV);
-  //   // console.log('middlewares JWT', process.env.JWT_SECRET);
+  // console.log('middlewares NODE_ENV', NODE_ENV);
+  //   // console.log('middlewares JWT', JWT_SECRET);
 
-  // console.log('middlewares/auth.js, process.env.NODE_ENV', process.env.NODE_ENV);
-  // console.log('middlewares/auth.js, process.env.JWT_SECRET', process.env.JWT_SECRET);
+  // console.log('middlewares/auth.js, NODE_ENV', NODE_ENV);
+  // console.log('middlewares/auth.js, JWT_SECRET', JWT_SECRET);
 
-  console.log('middlewares/auth.js, NODE_ENV', process.env.NODE_ENV);
-  console.log('middlewares/auth.js, JWT_SECRET', process.env.JWT_SECRET);
+  console.log('middlewares/auth.js, NODE_ENV', NODE_ENV);
+  console.log('middlewares/auth.js, JWT_SECRET', JWT_SECRET);
 
   try {
-    payload = jwt.verify(token, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'blah-blah-key');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'blah-blah-key');
   } catch (err) {
     throw new UnauthorizedError('Необходима авторизация');
   }
