@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const isEmail = require('validator/lib/isEmail');
-const { UnauthorizedError } = require('../errors/error401');
+const { UnauthorizedError } = require('../errors/UnauthorizedError');
 // const { REG_LINK } = require('../const/regexp');
 
 // схема юзера
