@@ -13,7 +13,7 @@ const cors = require('./middlewares/cors');
 const rateLimit = require('./middlewares/rateLimit');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { NODE_ENV, PORT, MONGO_BASE } = process.env;
+// const { NODE_ENV, PORT, MONGO_BASE } = process.env;
 
 const { NoValidIdError } = require('./errors/NoValidIdError');
 const error500 = require('./middlewares/errorHandler');
@@ -52,7 +52,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Подключаемся к БД moongoose
 mongoose.set('strictQuery', false); // убираем warning из консоли при старте
-mongoose.connect(MONGO_BASE);
+mongoose.connect(process.env.MONGO_BASE);
 
 route(app);
 
@@ -70,8 +70,8 @@ app.use((req, res, next) => {
 // Обработка ошибок сервера, ошибка 500
 error500(app);
 
-console.log('status', NODE_ENV);
-console.log('port', PORT);
+console.log('status', process.env.NODE_ENV);
+console.log('port', process.env.PORT);
 
-app.listen(NODE_ENV === 'production' ? PORT : 3004, () => {
+app.listen(process.env.NODE_ENV === 'production' ? process.env.PORT : 3004, () => {
 });
