@@ -27,7 +27,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => REG_LINK.test(v),
-      message: () => 'Неправильный формат ссылки на картинку',
+      message: () => 'Неправильный формат ссылки',
     },
   },
   trailerLink: {
@@ -35,7 +35,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => REG_LINK.test(v),
-      message: () => 'Неправильный формат ссылки на картинку',
+      message: () => 'Неправильный формат ссылки',
     },
   },
   thumbnail: {
@@ -43,7 +43,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => REG_LINK.test(v),
-      message: () => 'Неправильный формат ссылки на картинку',
+      message: () => 'Неправильный формат ссылки',
     },
   },
   owner: {
