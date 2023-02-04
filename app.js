@@ -6,7 +6,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const route = require('./routes/index');
+const route = require('./routes');
 
 // User's dependencies
 const cors = require('./middlewares/cors');
@@ -15,7 +15,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // const { NODE_ENV, PORT, MONGO_BASE } = process.env;
 
-const { NoValidIdError } = require('./errors/NoValidIdError');
+const { NoFoundError } = require('./errors/NoFoundError');
 const error500 = require('./middlewares/errorHandler');
 
 // const options = {
@@ -44,6 +44,9 @@ app.use(cors);
 // Подключаем логгер запросов
 app.use(requestLogger);
 
+// Подключаем логгер ошибок
+app.use(errorLogger);
+
 // Используем helmet и body parser
 app.use(helmet());
 app.disable('x-powered-by');
@@ -56,16 +59,8 @@ mongoose.connect(process.env.MONGO_BASE);
 
 route(app);
 
-// Подключаем логгер ошибок
-app.use(errorLogger);
-
 // Обработка ошибок celebrate
 app.use(errors(app.err));
-
-// Ошибка 404 для несуществующих страниц
-app.use((req, res, next) => {
-  next(new NoValidIdError('Ошибка 404 - Страницы не существует'));
-});
 
 // Обработка ошибок сервера, ошибка 500
 error500(app);

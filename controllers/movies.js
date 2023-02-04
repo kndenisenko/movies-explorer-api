@@ -1,5 +1,5 @@
 const Movie = require('../models/movies');
-const { NoValidIdError } = require('../errors/NoValidIdError');
+const { NoFoundError } = require('../errors/NoFoundError');
 const { NoPermissionError } = require('../errors/NoPermissionError');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
@@ -17,35 +17,13 @@ module.exports.getAllMovies = (req, res, next) => {
 // Добавить фильм в БД
 module.exports.addMovie = (req, res, next) => {
   const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    nameRU, nameEN,
-    thumbnail,
     movieId,
   } = req.body;
 
   Movie.findOne({ movieId: `${movieId + req.user._id}` })
     .then((item) => {
       if (!item) {
-        Movie.create({
-          country,
-          director,
-          duration,
-          year,
-          description,
-          image,
-          trailerLink,
-          nameRU,
-          nameEN,
-          thumbnail,
-          owner: req.user._id,
-          movieId: `${movieId + req.user._id}`,
-        })
+        Movie.create({ ...req.body, owner: req.user._id })
           .then((movie) => {
             res.status(201).send(movie);
           })
@@ -77,10 +55,10 @@ module.exports.deleteMovie = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.message === 'NoValidId') {
-        next(new NoValidIdError('404 - Фильм с указанным id не найден'));
+      if (err.message === 'NoFoundError') {
+        next(new NoFoundError('404 - Фильм с указанным id не найден'));
       } else if (err.name === 'CastError') {
-        next(new CastError('404 - Передан неверный id'));
+        next(new CastError('400 - Передан неверный id'));
       } else {
         next(err);
       }

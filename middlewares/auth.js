@@ -15,7 +15,7 @@ const isAuthorized = (req, res, next) => {
 
   // Если аутентификация неудачна
   if (!auth) {
-    throw new UnauthorizedError('Введите логин и пароль');
+    throw new UnauthorizedError('Неверный логин или пароль');
   }
 
   const token = auth.replace('Bearer ', '');

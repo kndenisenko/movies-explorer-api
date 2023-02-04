@@ -8,6 +8,7 @@ const { UnauthorizedError } = require('../errors/UnauthorizedError');
 const userSchema = new mongoose.Schema({
   name: {
     type: String, // тип поля - строка
+    required: true, // Обязательное поле
     minlength: 2, // минимальное количество символов
     maxlength: 30, // максимальное количество символов
   },
@@ -24,7 +25,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: 8,
     select: false,
   },
 });
@@ -37,7 +37,7 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
     .then((user) => {
       // не нашёлся — отклоняем
       if (!user) {
-        return Promise.reject(new UnauthorizedError('401 - Юзер не найден'));
+        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
       }
       // нашёлся — сравниваем хеши
       return bcrypt.compare(password, user.password)

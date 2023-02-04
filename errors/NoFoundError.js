@@ -1,4 +1,4 @@
-class NoValidIdError extends Error {
+class NoFoundError extends Error {
   constructor(message) {
     super(message);
     this.name = 'NoValidIdError';
@@ -6,4 +6,4 @@ class NoValidIdError extends Error {
   }
 }
 
-module.exports = { NoValidIdError };
+module.exports = { NoFoundError };
