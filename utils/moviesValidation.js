@@ -12,21 +12,21 @@ module.exports.postMovies = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Неправильная ссылка');
+      return helpers.message('Неправильная ссылка на картинку');
     }),
     trailerLink: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Неправильная ссылка');
+      return helpers.message('Неправильная ссылка на трейлер');
     }),
     thumbnail: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Неправильная ссылка');
+      return helpers.message('Неправильная ссылка на thumbnail');
     }),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string(),
   }),

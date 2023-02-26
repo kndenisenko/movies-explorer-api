@@ -26,6 +26,7 @@ module.exports = (app) => {
   app.use('/', isAuthorized, users);
   app.use('/', isAuthorized, movies);
 
+  // Ошибка 404, страницы не существует
   app.use((req, res, next) => {
     next(new PageNotFoundError('404 - Страницы не существует'));
   });

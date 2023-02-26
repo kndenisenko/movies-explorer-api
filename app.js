@@ -6,7 +6,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const route = require('./routes');
+const route = require('./routes/index');
 
 // User's dependencies
 const cors = require('./middlewares/cors');
@@ -15,23 +15,8 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // const { NODE_ENV, PORT, MONGO_BASE } = process.env;
 
-const { NoFoundError } = require('./errors/NoFoundError');
+// const { NotFoundError } = require('./errors/NotFoundError');
 const error500 = require('./middlewares/errorHandler');
-
-// const options = {
-//   origin: [
-//     'http://localhost:3000',
-//     'http://localhost:27017',
-//     'https://badass.nomoredomains.club',
-//     'https://api.badass.nomoredomains.club',
-//     // 'https://YOUR.github.io',
-//   ],
-//   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204,
-//   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-//   credentials: true,
-// };
 
 // подключаем dotenv
 dotenv.config();
@@ -55,12 +40,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Подключаемся к БД moongoose
 mongoose.set('strictQuery', false); // убираем warning из консоли при старте
-mongoose.connect(process.env.MONGO_BASE);
+mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.MONGO_BASE : 'mongodb://localhost:27017/bitfilmsdbdev');
 
 route(app);
 
 // Обработка ошибок celebrate
 app.use(errors(app.err));
+
+// // Ошибка 404 для несуществующих страниц
+// app.use((req, res, next) => {
+//   next(new NotFoundError('Ошибка 404 - Страницы не существует'));
+// });
 
 // Обработка ошибок сервера, ошибка 500
 error500(app);

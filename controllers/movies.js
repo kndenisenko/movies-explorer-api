@@ -1,13 +1,13 @@
 const Movie = require('../models/movies');
-const { NoFoundError } = require('../errors/NoFoundError');
+const { NotFoundError } = require('../errors/NotFoundError');
 const { NoPermissionError } = require('../errors/NoPermissionError');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
 const { CastError } = require('../errors/CastError');
 
-// Получить список фильмов из БД
+// Получить список фильмов из БД только от текущего юзера
 module.exports.getAllMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id }) // owner: req.user._id - опредееляет текущуего юзера
     .then((movie) => {
       res.send(movie);
     })
@@ -16,11 +16,20 @@ module.exports.getAllMovies = (req, res, next) => {
 
 // Добавить фильм в БД
 module.exports.addMovie = (req, res, next) => {
-  const {
-    movieId,
-  } = req.body;
+  // const {
+  //   country,
+  //   director,
+  //   duration,
+  //   year,
+  //   description,
+  //   image,
+  //   trailerLink,
+  //   nameRU, nameEN,
+  //   thumbnail,
+  //   movieId,
+  // } = req.body;
 
-  Movie.findOne({ movieId: `${movieId + req.user._id}` })
+  Movie.findOne({ ...req.body, owner: req.user._id })
     .then((item) => {
       if (!item) {
         Movie.create({ ...req.body, owner: req.user._id })
@@ -55,8 +64,8 @@ module.exports.deleteMovie = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.message === 'NoFoundError') {
-        next(new NoFoundError('404 - Фильм с указанным id не найден'));
+      if (err.message === 'NoValidId') {
+        next(new NotFoundError('404 - Фильм с указанным id не найден'));
       } else if (err.name === 'CastError') {
         next(new CastError('400 - Передан неверный id'));
       } else {
