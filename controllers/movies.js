@@ -4,6 +4,7 @@ const { NoPermissionError } = require('../errors/NoPermissionError');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
 const { CastError } = require('../errors/CastError');
+const { constants } = require('../const/const');
 
 // Получить список фильмов из БД только от текущего юзера
 module.exports.getAllMovies = (req, res, next) => {
@@ -38,12 +39,12 @@ module.exports.addMovie = (req, res, next) => {
           })
           .catch((err) => {
             if (err.name === 'ValidationError') {
-              next(new ValidationError('400 - Переданы некорректные данные при создании фильма'));
+              next(new ValidationError(constants.MOVIE_VALIDATION_FAILED));
             }
             next(err);
           });
       } else {
-        next(new ConflictError('409 - Такой фильм уже существует'));
+        next(new ConflictError(constants.MOVIE_ALREADY_CREATED));
       }
     })
     .catch((err) => {
@@ -60,14 +61,14 @@ module.exports.deleteMovie = (req, res, next) => {
         await Movie.findByIdAndRemove(req.params.movieId);
         res.status(200).send({ message: 'Фильм удален' });
       } else {
-        throw new NoPermissionError('403 — Нельзя удалять чужие фильмы');
+        throw new NoPermissionError(constants.CANT_DELETE_OTHER_MOVIES);
       }
     })
     .catch((err) => {
       if (err.message === 'NoValidId') {
-        next(new NotFoundError('404 - Фильм с указанным id не найден'));
+        next(new NotFoundError(constants.ID_NOT_FOUND));
       } else if (err.name === 'CastError') {
-        next(new CastError('400 - Передан неверный id'));
+        next(new CastError(constants.MOVIE_ID_VALIDATION_FAILED));
       } else {
         next(err);
       }

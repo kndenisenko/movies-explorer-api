@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const { ConflictError } = require('../errors/ConflictError');
 const { ValidationError } = require('../errors/ValidationError');
-
+const { constants } = require('../const/const');
 // const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Контроллер изменения имени и почты Юзера updateUser
@@ -26,7 +26,7 @@ function updateUser(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('400 —  Некорректное ID пользователя'));
+        next(new ValidationError(constants.EMAIL_VALIDATION_FAILED));
       } else {
         next(err);
       }
@@ -51,9 +51,9 @@ module.exports.createUser = (req, res, next) => {
       })
       .catch((err) => {
         if (err.code === 11000) {
-          next(new ConflictError('409 - Почта уже используется, смените почту'));
+          next(new ConflictError(constants.REG_FAILED_EMAIL_IS_USED));
         } else if (err.name === 'ValidationError') {
-          next(new ValidationError('400 - Переданы некорректные данные при создании пользователя'));
+          next(new ValidationError(constants.USER_CREDENTIALS_VALIDATION_FAILED));
         } else {
           next(err);
         }
@@ -98,12 +98,12 @@ module.exports.patchUpdateUser = (req, res, next) => {
       } else if (user._id.toString() === req.user._id) {
         updateUser(req, res, next);
       } else {
-        next(new ConflictError('409 - Почта уже используется, смените почту'));
+        next(new ConflictError(constants.REG_FAILED_EMAIL_IS_USED));
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('400 —  Переданы некорректные данные при обновлении профиля'));
+        next(new ValidationError(constants.USER_CREDENTIALS_UPDATE_FAILED));
       } else {
         next(err);
       }

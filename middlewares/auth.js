@@ -1,6 +1,7 @@
 // backend/middlewares/auth.js
 const jwt = require('jsonwebtoken');
 const { UnauthorizedError } = require('../errors/UnauthorizedError');
+const { constants } = require('../const/const');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -13,7 +14,7 @@ const isAuthorized = (req, res, next) => {
 
   // Если аутентификация неудачна
   if (!auth) {
-    throw new UnauthorizedError('Неверный логин или пароль');
+    throw new UnauthorizedError(constants.AUTH_FAILED);
   }
 
   const token = auth.replace('Bearer ', '');
@@ -24,7 +25,7 @@ const isAuthorized = (req, res, next) => {
   try {
     payload = jwt.verify(token, process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'blah-blah-key');
   } catch (err) {
-    throw new UnauthorizedError('Необходима авторизация');
+    throw new UnauthorizedError(constants.AUTH_REQUIRED);
   }
 
   req.user = payload;

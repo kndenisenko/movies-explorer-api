@@ -17,17 +17,18 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // const { NotFoundError } = require('./errors/NotFoundError');
 const error500 = require('./middlewares/errorHandler');
+const { constants } = require('./const/const');
 
 // подключаем dotenv
 dotenv.config();
 
 const app = express();
+// Подключаем логгер запросов
+app.use(requestLogger);
+
 rateLimit(app);
 
 app.use(cors);
-
-// Подключаем логгер запросов
-app.use(requestLogger);
 
 // Подключаем логгер ошибок
 app.use(errorLogger);
@@ -40,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Подключаемся к БД moongoose
 mongoose.set('strictQuery', false); // убираем warning из консоли при старте
-mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.MONGO_BASE : 'mongodb://localhost:27017/bitfilmsdbdev');
+mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.MONGO_BASE : constants.MONGO_BASE_DEV);
 
 route(app);
 

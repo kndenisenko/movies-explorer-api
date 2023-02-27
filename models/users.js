@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const isEmail = require('validator/lib/isEmail');
 const { UnauthorizedError } = require('../errors/UnauthorizedError');
+const { constants } = require('../const/const');
 // const { REG_LINK } = require('../const/regexp');
 
 // схема юзера
@@ -9,7 +10,6 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String, // тип поля - строка
     required: true, // Необходимое поле
-    unique: true, // Уникальное поле
     minlength: 2, // минимальное количество символов
     maxlength: 30, // максимальное количество символов
   },
@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    unique: true,
     // minlength: 8,
     select: false,
   },
@@ -39,13 +38,13 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
     .then((user) => {
       // не нашёлся — отклоняем
       if (!user) {
-        return Promise.reject(new UnauthorizedError('401 - Юзер не найден'));
+        return Promise.reject(new UnauthorizedError(constants.AUTH_FAILED_NOT_FOUND));
       }
       // нашёлся — сравниваем хеши
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) { // Если не совпадает почта или пароль
-            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+            return Promise.reject(new UnauthorizedError(constants.AUTH_FAILED));
           }
           return user; // почта и пароль совпал, теперь user доступен
         });
