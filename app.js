@@ -25,8 +25,6 @@ dotenv.config();
 const app = express();
 // Подключаем логгер запросов
 app.use(requestLogger);
-// Подключаем логгер ошибок
-app.use(errorLogger);
 rateLimit(app);
 
 app.use(cors);
@@ -42,6 +40,9 @@ mongoose.set('strictQuery', false); // убираем warning из консол�
 mongoose.connect(process.env.NODE_ENV === 'production' ? process.env.MONGO_BASE : constants.MONGO_BASE_DEV);
 
 route(app);
+
+// Подключаем логгер ошибок
+app.use(errorLogger);
 
 // Обработка ошибок celebrate
 app.use(errors(app.err));
