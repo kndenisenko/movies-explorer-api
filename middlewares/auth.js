@@ -11,10 +11,10 @@ let payload;
 // Обработка авторизации
 const isAuthorized = (req, res, next) => {
   const auth = req.headers.authorization;
-
   // Если аутентификация неудачна
   if (!auth) {
-    throw new UnauthorizedError(constants.AUTH_FAILED);
+    console.log('auth', req.headers.authorization);
+    throw new UnauthorizedError(constants.AUTH_FAILED_TOCKEN_CHECK);
   }
 
   const token = auth.replace('Bearer ', '');

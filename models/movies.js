@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { REG_LINK } = require('../const/regexp');
+const { constants } = require('../const/const');
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -26,7 +26,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => REG_LINK.test(v),
+      validator: (v) => constants.REG_LINK.test(v),
       message: () => 'Неправильный формат ссылки на картинку',
     },
   },
@@ -34,7 +34,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => REG_LINK.test(v),
+      validator: (v) => constants.REG_LINK.test(v),
       message: () => 'Неправильный формат ссылки на трейлер',
     },
   },
@@ -42,7 +42,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => REG_LINK.test(v),
+      validator: (v) => constants.REG_LINK.test(v),
       message: () => 'Неправильный формат ссылки на thumbnail',
     },
   },

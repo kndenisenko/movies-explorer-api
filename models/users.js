@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const isEmail = require('validator/lib/isEmail');
 const { UnauthorizedError } = require('../errors/UnauthorizedError');
 const { constants } = require('../const/const');
-// const { REG_LINK } = require('../const/regexp');
 
 // схема юзера
 const userSchema = new mongoose.Schema({

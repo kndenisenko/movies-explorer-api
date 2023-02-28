@@ -25,13 +25,11 @@ dotenv.config();
 const app = express();
 // Подключаем логгер запросов
 app.use(requestLogger);
-
+// Подключаем логгер ошибок
+app.use(errorLogger);
 rateLimit(app);
 
 app.use(cors);
-
-// Подключаем логгер ошибок
-app.use(errorLogger);
 
 // Используем helmet и body parser
 app.use(helmet());
