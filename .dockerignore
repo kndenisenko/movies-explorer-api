@@ -1,0 +1,7 @@
+# .dockerignore created by
+# https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+# Only for test purposes
+
+node_modules
+logs
+npm-debug.log
