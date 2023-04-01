@@ -2,8 +2,9 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const options = [
   'http://localhost:3000',
-  'https://badass.students.nomoredomains.club',
-  'https://badass.students.nomoredomains.club',
+  'http://localhost:3005',
+  'https://badass.nomoredomains.club',
+  'https://badass.nomoredomains.club',
   // 'https://YOUR.github.io',
 ];
 
