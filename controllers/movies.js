@@ -8,7 +8,7 @@ const { constants } = require('../const/const');
 
 // Получить список фильмов из БД только от текущего юзера
 module.exports.getAllMovies = (req, res, next) => {
-  Movie.find({}) // { owner: req.user._id } | owner: req.user._id - опредееляет текущуего юзера
+  Movie.find({ owner: req.user._id }) // owner: req.user._id - опредееляет текущуего юзера
     .then((movie) => {
       res.send(movie);
     })
@@ -17,36 +17,23 @@ module.exports.getAllMovies = (req, res, next) => {
 
 // Добавить фильм в БД
 module.exports.addMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    nameRU, nameEN,
-    thumbnail,
-    movieId,
-  } = req.body;
+  // const {
+  //   country,
+  //   director,
+  //   duration,
+  //   year,
+  //   description,
+  //   image,
+  //   trailerLink,
+  //   nameRU, nameEN,
+  //   thumbnail,
+  //   movieId,
+  // } = req.body;
 
-  Movie.findOne({ movieId: `${movieId + req.user._id}` })
+  Movie.findOne({ ...req.body, owner: req.user._id })
     .then((item) => {
       if (!item) {
-        Movie.create({
-          country,
-          director,
-          duration,
-          year,
-          description,
-          image,
-          trailerLink,
-          nameRU,
-          nameEN,
-          thumbnail,
-          owner: req.user._id,
-          movieId: `${movieId + req.user._id}`,
-        })
+        Movie.create({ ...req.body, owner: req.user._id })
           .then((movie) => {
             res.status(201).send(movie);
           })
