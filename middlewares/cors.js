@@ -3,8 +3,10 @@
 const options = [
   'http://localhost:3000',
   'http://localhost:3005',
+  'http://badass.nomoredomains.club',
   'https://badass.nomoredomains.club',
-  'https://badass.nomoredomains.club',
+  'http://api.badass.nomoredomains.club',
+  'https://api.badass.nomoredomains.club',
   // 'https://YOUR.github.io',
 ];
 
