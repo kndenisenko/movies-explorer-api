@@ -30,10 +30,10 @@ module.exports.addMovie = (req, res, next) => {
   //   movieId,
   // } = req.body;
 
-  Movie.findOne({ ...req.body, owner: req.user._id })
+  Movie.findOne({ ...req.body, owner: req.body.movieId + req.user._id })
     .then((item) => {
       if (!item) {
-        Movie.create({ ...req.body, owner: req.user._id })
+        Movie.create({ ...req.body, owner: req.body.movieId + req.user._id })
           .then((movie) => {
             res.status(201).send(movie);
           })
