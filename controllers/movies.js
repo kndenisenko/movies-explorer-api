@@ -17,23 +17,37 @@ module.exports.getAllMovies = (req, res, next) => {
 
 // Добавить фильм в БД
 module.exports.addMovie = (req, res, next) => {
-  // const {
-  //   country,
-  //   director,
-  //   duration,
-  //   year,
-  //   description,
-  //   image,
-  //   trailerLink,
-  //   nameRU, nameEN,
-  //   thumbnail,
-  //   movieId,
-  // } = req.body;
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+  } = req.body;
 
-  Movie.findOne({ ...req.body, owner: req.user._id })
+  Movie.findOne({ movieId: `${movieId + req.user._id}` })
     .then((item) => {
       if (!item) {
-        Movie.create({ ...req.body, owner: req.user._id })
+        Movie.create({
+          country,
+          director,
+          duration,
+          year,
+          description,
+          image,
+          trailerLink,
+          nameRU,
+          nameEN,
+          thumbnail,
+          owner: req.user._id,
+          movieId: `${movieId + req.user._id}`,
+        })
           .then((movie) => {
             res.status(201).send(movie);
           })
